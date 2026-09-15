@@ -1,0 +1,30 @@
+# Pin Grafana to the control plane
+grafana:
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+
+# Pin Prometheus Spec to the control plane
+prometheus:
+  prometheusSpec:
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+
+# Node exporter needs to run on all nodes (including workers) to scrape OS metrics
+prometheus-node-exporter:
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
